@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generar layout (seed42)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed42",
+        "--seed",
+        "42",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed42)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed42",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed42)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed42",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Visualizar simulacion (seed42)",
+      "type": "shell",
+      "command": "python",
+      "args": ["visualiza_simulacion.py", "--escenario", "seed42"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Pipeline seed42 (layout -> pedidos -> simulacion -> visualizacion)",
+      "dependsOn": [
+        "Generar layout (seed42)",
+        "Generar pedidos (seed42)",
+        "Ejecutar simulacion (seed42)",
+        "Visualizar simulacion (seed42)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}
