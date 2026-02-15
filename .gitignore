@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+
+# Conda
+.conda/
+conda-bld/
+envs/
+*.conda
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/*
+!.vscode/tasks.json
+
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Project outputs
+outputs/
+
+# Windows binaries
+*.exe
+*.dll
+*.msi
+*.cab
+*.lnk
+
+# JetBrains / PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
