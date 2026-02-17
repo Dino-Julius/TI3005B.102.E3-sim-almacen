@@ -69,6 +69,655 @@
       ],
       "dependsOrder": "sequence",
       "problemMatcher": []
+    },
+
+    // ===== SEED 1: Baseline (small prime) =====
+    {
+      "label": "Pipeline seed1 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed1)",
+        "Generar pedidos (seed1)",
+        "Ejecutar simulacion (seed1)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed1)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed1",
+        "--seed",
+        "1",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed1)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed1",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed1)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed1",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 7: Prime number (properties different from 1) =====
+    {
+      "label": "Pipeline seed7 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed7)",
+        "Generar pedidos (seed7)",
+        "Ejecutar simulacion (seed7)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed7)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed7",
+        "--seed",
+        "7",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed7)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed7",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed7)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed7",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 13: Prime (stress on hash collisions) =====
+    {
+      "label": "Pipeline seed13 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed13)",
+        "Generar pedidos (seed13)",
+        "Ejecutar simulacion (seed13)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed13)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed13",
+        "--seed",
+        "13",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed13)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed13",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed13)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed13",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 97: Large prime (different distribution tail) =====
+    {
+      "label": "Pipeline seed97 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed97)",
+        "Generar pedidos (seed97)",
+        "Ejecutar simulacion (seed97)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed97)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed97",
+        "--seed",
+        "97",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed97)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed97",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed97)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed97",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 256: Power of 2 (special structure) =====
+    {
+      "label": "Pipeline seed256 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed256)",
+        "Generar pedidos (seed256)",
+        "Ejecutar simulacion (seed256)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed256)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed256",
+        "--seed",
+        "256",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed256)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed256",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed256)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed256",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 1337: Leetspeak (non-uniform distribution) =====
+    {
+      "label": "Pipeline seed1337 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed1337)",
+        "Generar pedidos (seed1337)",
+        "Ejecutar simulacion (seed1337)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed1337)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed1337",
+        "--seed",
+        "1337",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed1337)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed1337",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed1337)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed1337",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 2024: Year (temporal relevance) =====
+    {
+      "label": "Pipeline seed2024 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed2024)",
+        "Generar pedidos (seed2024)",
+        "Ejecutar simulacion (seed2024)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed2024)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed2024",
+        "--seed",
+        "2024",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed2024)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed2024",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed2024)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed2024",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 31415: Pi approximation (irrational-like) =====
+    {
+      "label": "Pipeline seed31415 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed31415)",
+        "Generar pedidos (seed31415)",
+        "Ejecutar simulacion (seed31415)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed31415)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed31415",
+        "--seed",
+        "31415",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed31415)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed31415",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed31415)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed31415",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 65537: Fermat prime (cryptographic properties) =====
+    {
+      "label": "Pipeline seed65537 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed65537)",
+        "Generar pedidos (seed65537)",
+        "Ejecutar simulacion (seed65537)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed65537)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed65537",
+        "--seed",
+        "65537",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed65537)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed65537",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed65537)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed65537",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== SEED 999999: Maximum 6-digit (stress boundary) =====
+    {
+      "label": "Pipeline seed999999 (layout -> pedidos -> simulacion)",
+      "dependsOn": [
+        "Generar layout (seed999999)",
+        "Generar pedidos (seed999999)",
+        "Ejecutar simulacion (seed999999)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar layout (seed999999)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_layout.py",
+        "--escenario",
+        "seed999999",
+        "--seed",
+        "999999",
+        "--ancho",
+        "120",
+        "--alto",
+        "80",
+        "--estaciones",
+        "20"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generar pedidos (seed999999)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "generador_pedidos.py",
+        "--escenario",
+        "seed999999",
+        "--pedidos",
+        "600",
+        "--burst"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Ejecutar simulacion (seed999999)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "demo_final.py",
+        "--escenario",
+        "seed999999",
+        "--robots",
+        "20",
+        "--ticks",
+        "10000"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+
+    // ===== METATASKING: Run 10 seeds sequentially =====
+    {
+      "label": "MEGA Pipeline: Todas 10 semillas",
+      "dependsOn": [
+        "Pipeline seed1 (layout -> pedidos -> simulacion)",
+        "Pipeline seed7 (layout -> pedidos -> simulacion)",
+        "Pipeline seed13 (layout -> pedidos -> simulacion)",
+        "Pipeline seed97 (layout -> pedidos -> simulacion)",
+        "Pipeline seed256 (layout -> pedidos -> simulacion)",
+        "Pipeline seed1337 (layout -> pedidos -> simulacion)",
+        "Pipeline seed2024 (layout -> pedidos -> simulacion)",
+        "Pipeline seed31415 (layout -> pedidos -> simulacion)",
+        "Pipeline seed65537 (layout -> pedidos -> simulacion)",
+        "Pipeline seed999999 (layout -> pedidos -> simulacion)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
     }
   ]
 }
