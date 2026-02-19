@@ -718,6 +718,79 @@
       ],
       "dependsOrder": "sequence",
       "problemMatcher": []
+    },
+
+    // ===== ANÁLISIS: Scripts movidos a carpeta analisis/ =====
+    {
+      "label": "[ANÁLISIS] Generar todas las visualizaciones",
+      "type": "shell",
+      "command": "python",
+      "args": ["analisis/generar_todo_visualizaciones.py"],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "[ANÁLISIS] Generar análisis estadístico",
+      "type": "shell",
+      "command": "python",
+      "args": ["analisis/analizador_estadistico.py"],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "[ANÁLISIS] Crear comparador visual",
+      "type": "shell",
+      "command": "python",
+      "args": ["analisis/comparador_visual_seed1_vs_seed42.py"],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "[ANÁLISIS] Analizar métricas comparativas",
+      "type": "shell",
+      "command": "python",
+      "args": ["analisis/analizar_metricas_comparativas.py"],
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "[ANÁLISIS] Pipeline COMPLETO: Análisis + Visualización",
+      "dependsOn": [
+        "[ANÁLISIS] Generar todas las visualizaciones",
+        "[ANÁLISIS] Generar análisis estadístico"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
     }
   ]
 }
