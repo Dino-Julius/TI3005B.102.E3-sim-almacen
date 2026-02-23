@@ -106,8 +106,11 @@ def generar_layout(seed: int, ancho: int, alto: int, estaciones: int) -> Dict:
     # Apron frontal arriba del buffer (para incorporaciones)
     _recortar_rectangulo(grid, 1, y_buffer - 2, ancho - 2, 2, LIBRE)
 
-    # Zona de parking/carga
-    ancho_parking, alto_parking = 12, 8
+    # Zona de parking/carga (dinámico: 10% del ancho y alto del almacén)
+    # En 120x80: 12x8 (10% de cada dimensión)
+    # En 300x200: 30x20 (10% de cada dimensión)
+    ancho_parking = max(20, int(ancho * 0.10))
+    alto_parking = max(15, int(alto * 0.10))
     x_parking0, y_parking0 = 2, alto - (alto_parking + 5)
     _recortar_rectangulo(grid, x_parking0, y_parking0, ancho_parking, alto_parking, LIBRE)
 
@@ -120,15 +123,18 @@ def generar_layout(seed: int, ancho: int, alto: int, estaciones: int) -> Dict:
     alto_storage = y_bottom - y_top
     ancho_storage = x_right - x_left + 1
 
-    # Macro-bloques 3x2 con pasillos principales
-    ancho_pasillo_principal = 2
+    # Macro-bloques 3x2 con pasillos principales (ESCALABLES)
+    # En 120x80: ancho_pasillo = 2 (fijo)
+    # En 300x200: ancho_pasillo = max(2, int(300*0.01)) = 3 celdas
+    ancho_pasillo_principal = max(2, int(ancho * 0.01))
+    alto_pasillo_horizontal = max(2, int(alto * 0.01))
+    
     cols = 3
     filas = 2
 
     ancho_total_pasillos_verticales = (cols + 1) * ancho_pasillo_principal
     ancho_bloque = (ancho_storage - ancho_total_pasillos_verticales) // cols
 
-    alto_pasillo_horizontal = 2
     alto_total_pasillos_horiz = (filas + 1) * alto_pasillo_horizontal
     alto_bloque = (alto_storage - alto_total_pasillos_horiz) // filas
 
@@ -186,14 +192,21 @@ def generar_layout(seed: int, ancho: int, alto: int, estaciones: int) -> Dict:
             x += ancho_bloque + ancho_pasillo_principal
         y += alto_bloque + alto_pasillo_horizontal
 
-    # Cross-aisles cada 10 filas (corredor de 2 filas)
-    cada = 10
+    # Cross-aisles cada N filas (corredor escalable según alto del almacén)
+    # En 120x80 (alto=80): cada = 10, ~8 cross-aisles
+    # En 300x200 (alto=200): cada = max(8, 200/20) = 10, ~20 cross-aisles
+    # Ancho del cross-aisle también escala
+    cada = max(8, int(alto_storage / 20))
+    ancho_cross_aisle = max(2, int(alto * 0.01))
     for yy in range(y_top + 5, y_bottom, cada):
-        _recortar_rectangulo(grid, x_left, yy, ancho_storage, 2, LIBRE)
+        _recortar_rectangulo(grid, x_left, yy, ancho_storage, ancho_cross_aisle, LIBRE)
 
-    # Conectar parking con apron
+    # Conectar parking con apron (ESCALABLE con el tamaño del almacén)
+    # En 120x80: ancho = 120 * 0.015 = 1.8 → max(2, 1) = 2 celdas
+    # En 300x200: ancho = 300 * 0.015 = 4.5 → max(2, 4) = 4 celdas
+    ancho_corredor_conexion = max(2, int(ancho * 0.015))
     x_corredor = x_parking0 + ancho_parking + 2
-    _recortar_rectangulo(grid, x_corredor, y_parking0 - 15, 2, (alto - 2) - (y_parking0 - 15), LIBRE)
+    _recortar_rectangulo(grid, x_corredor, y_parking0 - 15, ancho_corredor_conexion, (alto - 2) - (y_parking0 - 15), LIBRE)
 
     # puntos de spawn dentro del parking
     spawn_points: List[Celda] = []
@@ -202,7 +215,11 @@ def generar_layout(seed: int, ancho: int, alto: int, estaciones: int) -> Dict:
             if grid[yy, xx] == LIBRE:
                 spawn_points.append((xx, yy))
     rng.shuffle(spawn_points)
-    spawn_points = spawn_points[:200]
+    # Limitar spawn points al 50% del área de parking (escalable)
+    # En 120x80: 12x8=96 celdas, 50% = 48 (pero original limita a 200, así que límite mínimo es 10)
+    # En 300x200: 30x20=600 celdas, 50% = 300
+    max_spawns = max(10, (ancho_parking * alto_parking) // 2)
+    spawn_points = spawn_points[:max_spawns]
 
     # Validar alcanzabilidad: desde el primer spawn, docks alcanzables
     if not spawn_points:

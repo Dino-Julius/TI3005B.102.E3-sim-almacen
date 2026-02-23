@@ -1,0 +1,202 @@
+
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Comparación Visual: seed1 vs seed42</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #333;
+                padding: 20px;
+            }
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                padding: 30px;
+            }
+            h1 {
+                text-align: center;
+                color: #333;
+                margin-bottom: 30px;
+                font-size: 2.5em;
+            }
+            .info-box {
+                background: #f0f4ff;
+                border-left: 5px solid #667eea;
+                padding: 15px;
+                margin-bottom: 25px;
+                border-radius: 5px;
+            }
+            .seed-comparison {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+            .seed-card {
+                border-radius: 8px;
+                padding: 20px;
+                text-align: center;
+            }
+            .seed-card.seed1 {
+                background: #ffebee;
+                border: 3px solid #d32f2f;
+            }
+            .seed-card.seed42 {
+                background: #e8f5e9;
+                border: 3px solid #388e3c;
+            }
+            .seed-card h2 {
+                margin-top: 0;
+                font-size: 1.8em;
+            }
+            .seed-card .metric {
+                font-size: 2em;
+                font-weight: bold;
+                margin: 10px 0;
+            }
+            .seed-card .label {
+                font-size: 0.9em;
+                color: #666;
+            }
+            .seed1 .metric {
+                color: #d32f2f;
+            }
+            .seed42 .metric {
+                color: #388e3c;
+            }
+            .comparison-img {
+                width: 100%;
+                margin: 20px 0;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            .section {
+                margin: 40px 0;
+            }
+            .section h2 {
+                border-bottom: 3px solid #667eea;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+                color: #333;
+            }
+            .conclusion {
+                background: #fff3e0;
+                border-left: 5px solid #f57c00;
+                padding: 20px;
+                border-radius: 5px;
+                margin-top: 30px;
+                font-size: 1.1em;
+                line-height: 1.6;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 40px;
+                color: #999;
+                font-size: 0.9em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🏭 Análisis Comparativo Visual</h1>
+            <h2 style="text-align: center; color: #667eea; margin-top: -10px;">
+                seed1 (54 deadlocks) vs seed42 (0 deadlocks)
+            </h2>
+            
+            <div class="info-box">
+                <strong>📌 Contexto:</strong> Se ejecutó la simulación con 10 semillas diferentes para 
+                identificar variabilidad. seed1 generó 54 deadlocks (bloqueos de robots) mientras que 
+                seed42 no generó ninguno. Esta comparación visual permite entender el impacto real de 
+                los deadlocks en el almacén simulado.
+            </div>
+            
+            <div class="section">
+                <h2>📊 Comparación de Métricas Clave</h2>
+                <img src="comparacion_seed1_vs_seed42_metricas.png" alt="Comparación de métricas" class="comparison-img">
+                
+                <div class="seed-comparison">
+                    <div class="seed-card seed1">
+                        <h2>seed1</h2>
+                        <div class="label">Deadlocks (PROBLEMA)</div>
+                        <div class="metric">54</div>
+                        <hr>
+                        <div class="label">Pedidos Completados</div>
+                        <div class="metric">596/600</div>
+                        <div class="label">Throughput</div>
+                        <div class="metric">59.60</div>
+                    </div>
+                    <div class="seed-card seed42">
+                        <h2>seed42</h2>
+                        <div class="label">Deadlocks (BASELINE)</div>
+                        <div class="metric">0</div>
+                        <hr>
+                        <div class="label">Pedidos Completados</div>
+                        <div class="metric">597/600</div>
+                        <div class="label">Throughput</div>
+                        <div class="metric">59.70</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🔥 Heatmap: Tiempo de Espera</h2>
+                <p>Muestra dónde los robots pasan más tiempo esperando. zones en rojo = más espera</p>
+                <img src="comparacion_heatmap_esperas_seed1_vs_seed42.png" alt="Heatmap de esperas" class="comparison-img">
+                <p><strong>Observación:</strong> seed1 (izq) muestra áreas rojas más intensas, indicando 
+                puntos calientes donde los robots se bloquean mutuamente.</p>
+            </div>
+            
+            <div class="section">
+                <h2>📍 Heatmap: Visitas de Robots</h2>
+                <p>Muestra cuántas veces robots visitan cada celda. Zonas azules = alta congestión.</p>
+                <img src="comparacion_heatmap_visitas_seed1_vs_seed42.png" alt="Heatmap de visitas" class="comparison-img">
+                <p><strong>Observación:</strong> seed1 muestra distribución más concentrada (cuello de botella)</p>
+            </div>
+            
+            <div class="section">
+                <h2>📈 Heatmap: Ratio de Actividad</h2>
+                <p>Métrica normalizaada: combina visitas y esperas. Indica eficiencia por zona.</p>
+                <img src="comparacion_heatmap_ratio_seed1_vs_seed42.png" alt="Heatmap de ratio" class="comparison-img">
+                <p><strong>Observación:</strong> seed1 tiene zonas con color inconsistente (ineficiencia)</p>
+            </div>
+            
+            <div class="section">
+                <h2>🎬 Videos Disponibles</h2>
+                <p>Para ver la simulación en acción:</p>
+                <ul>
+                    <li><strong>outputs/seed1/simulacion.mp4</strong> - seed1 con 54 deadlocks (PROBLEMA VISIBLE)</li>
+                    <li><strong>outputs/seed42/simulacion.mp4</strong> - seed42 con 0 deadlocks (BASELINE)</li>
+                </ul>
+                <p style="font-size: 0.9em; color: #666;">
+                    💡 En los videos, los deadlocks aparecen como robots que se quedan quietos 
+                    en pasillos sin poder avanzar ni retroceder.
+                </p>
+            </div>
+            
+            <div class="conclusion">
+                <strong>🎯 Conclusión Principal:</strong>
+                <p>seed1 expone una vulnerabilidad clara del algoritmo baseline: la falta de 
+                coordinación efectiva lleva a 54 deadlocks (bloqueos de robots). Los heatmaps 
+                visualizan cómo ciertos pasillos y zonas se convierten en cuellos de botella 
+                naturales donde los robots se atrapan mutuamente sin poder resolverlo.</p>
+                
+                <p style="margin-top: 15px;"><strong>Implicación para mejora (Eje C):</strong>
+                Una estrategia de coordinación multirobótica (priorización, detección de ciclos, 
+                reglas de derecho de paso) podría eliminar o reducir significativamente estos 54 
+                deadlocks, resultando en una mejora del ~100% en esta métrica.</p>
+            </div>
+            
+            <div class="footer">
+                <p>Generado automáticamente el 16 Feb 2026 | TI3005B.102 - Simulación de Almacén</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    

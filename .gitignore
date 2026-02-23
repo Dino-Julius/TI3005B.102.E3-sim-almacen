@@ -28,8 +28,9 @@ Thumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# Project outputs
-outputs/
+# Project outputs - ignore only .mp4 videos
+outputs/*.mp4
+outputs/**/*.mp4
 
 # Windows binaries
 *.exe
