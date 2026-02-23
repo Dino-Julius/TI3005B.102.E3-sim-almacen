@@ -165,7 +165,7 @@ def main():
             tam = os.path.getsize(os.path.join(output_dir, archivo)) / (1024*1024)
             print(f"   📊 {archivo} ({tam:.1f} MB)")
         
-        if os.path.exists(os.path.join(output_dir, "reporte_comparacion_visual.html")):
+        if os.path.exists(os.path.join(output_dir, "reporte_comparacion_visual.html")) or os.path.exists("../reporte_comparacion_visual.html"):
             print(f"\n📄 Reporte HTML (⭐ ABRIR ESTO):")
             print(f"   📋 reporte_comparacion_visual.html (abre en navegador)")
         
@@ -176,7 +176,7 @@ def main():
         print("\n" + "="*80)
         print("\n🚀 PRÓXIMOS PASOS:")
         print("\n   1. Abre en navegador:")
-        print("      open outputs/reporte_comparacion_visual.html")
+        print("      open ../reporte_comparacion_visual.html")
         print("\n   2. Ve los videos para comparar visualmente los deadlocks:")
         print("      open outputs/seed1/simulacion.mp4")
         print("      open outputs/seed42/simulacion.mp4")

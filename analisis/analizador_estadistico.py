@@ -366,7 +366,7 @@ del sistema actual. El análisis abajo demuestra que:
     contenido_md += generar_conclusiones(m1, m42)
     
     # Guardar
-    ruta_salida = "outputs/analisis_estadistico_seed1_vs_seed42.md"
+    ruta_salida = "../analisis_estadistico_seed1_vs_seed42.md"
     with open(ruta_salida, "w", encoding="utf-8") as f:
         f.write(contenido_md)
     

@@ -178,7 +178,7 @@ def generar_comparacion_metricas():
     ax.set_title("Tabla Resumen", fontsize=12, fontweight='bold', pad=20)
     
     plt.tight_layout()
-    ruta_salida = "outputs/comparacion_seed1_vs_seed42_metricas.png"
+    ruta_salida = "../comparacion_seed1_vs_seed42_metricas.png"
     plt.savefig(ruta_salida, dpi=150, bbox_inches='tight')
     print(f"✅ Comparación de métricas guardada: {ruta_salida}")
     plt.close()
@@ -423,10 +423,10 @@ def generar_reporte_html():
     </html>
     """
     
-    with open("outputs/reporte_comparacion_visual.html", "w", encoding="utf-8") as f:
+    with open("../reporte_comparacion_visual.html", "w", encoding="utf-8") as f:
         f.write(html_content)
     
-    print("✅ Reporte HTML generado: outputs/reporte_comparacion_visual.html")
+    print("✅ Reporte HTML generado: ../reporte_comparacion_visual.html")
 
 def main():
     print("\n" + "="*80)
@@ -455,11 +455,11 @@ def main():
     print(" ✅ COMPARACIÓN VISUAL COMPLETADA")
     print("="*80)
     print("\n📁 Archivos generados:")
-    print("  - outputs/comparacion_seed1_vs_seed42_metricas.png")
+    print("  - ../comparacion_seed1_vs_seed42_metricas.png")
     print("  - outputs/comparacion_heatmap_*.png (3 archivos)")
-    print("  - outputs/reporte_comparacion_visual.html ⭐")
+    print("  - ../reporte_comparacion_visual.html ⭐")
     print("\n🌐 Abre el HTML en navegador para ver reporte interactivo:")
-    print("  open outputs/reporte_comparacion_visual.html")
+    print("  open ../reporte_comparacion_visual.html")
     print("\n" + "="*80)
 
 if __name__ == "__main__":

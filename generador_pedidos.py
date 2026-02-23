@@ -87,9 +87,9 @@ def main():
 
         if args.burst:
             if rng.random() < 0.70:
-                tick_creacion = int(rng.integers(0, 2001))
+                tick_creacion = int(rng.integers(0, 2001)) # ! 70% de peidos en los primeros dosmil ticks
             else:
-                tick_creacion = int(rng.integers(0, 10001))
+                tick_creacion = int(rng.integers(0, 10001)) # ! distribuido de manera uniforme
         else:
             tick_creacion = 0
 
