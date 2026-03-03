@@ -14,8 +14,10 @@ Celda = Tuple[int, int]
 
 # Utilidades de rutas (estándar outputs/<escenario>/...)
 
+
 def _ruta_por_escenario(escenario: str, nombre_archivo: str) -> str:
     return os.path.join("outputs", escenario, nombre_archivo)
+
 
 class RutasEscenario(NamedTuple):
     layout: str
@@ -23,6 +25,7 @@ class RutasEscenario(NamedTuple):
     anaqueles: str
     spawn: str
     pedidos: str
+
 
 def resolver_rutas_escenario(escenario: str) -> RutasEscenario:
     """
@@ -44,6 +47,7 @@ def resolver_rutas_escenario(escenario: str) -> RutasEscenario:
 
 # Modelo de datos
 
+
 @dataclass
 class Pedido:
     pedido_id: int
@@ -52,6 +56,7 @@ class Pedido:
     tick_creacion: int
     tick_asignacion: Optional[int] = None
     tick_completado: Optional[int] = None
+
 
 @dataclass
 class Robot:
@@ -66,6 +71,7 @@ class Robot:
     ticks_espera: int = 0
     celdas_movidas: int = 0
     ticks_ocupado: int = 0
+
 
 def cargar_layout(ruta_grid: str, ruta_estaciones: str, ruta_anaqueles: str, ruta_spawn: str):
     """
@@ -86,7 +92,8 @@ def cargar_layout(ruta_grid: str, ruta_estaciones: str, ruta_anaqueles: str, rut
     with open(ruta_spawn, "r", encoding="utf-8") as f:
         spawns = json.load(f)
 
-    estacion_dock = {int(e["estacion_id"]): tuple(e["dock"]) for e in estaciones}
+    estacion_dock = {int(e["estacion_id"]): tuple(e["dock"])
+                     for e in estaciones}
     anaquel_home = {int(a["anaquel_id"]): tuple(a["home"]) for a in anaqueles}
 
     # Robustez: normalizar spawn a tuplas de int
@@ -94,9 +101,11 @@ def cargar_layout(ruta_grid: str, ruta_estaciones: str, ruta_anaqueles: str, rut
 
     return grid, estacion_dock, anaquel_home, spawns_norm
 
+
 def celdas_adyacentes(celda: Celda) -> List[Celda]:
     x, y = celda
     return [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+
 
 def elegir_objetivo_adyacente(grid: np.ndarray, celda_anaquel: Celda) -> Optional[Celda]:
     """
@@ -113,6 +122,7 @@ def elegir_objetivo_adyacente(grid: np.ndarray, celda_anaquel: Celda) -> Optiona
         if en_rango(x, y) and grid[y, x] in (LIBRE, ESTACION):
             return c
     return None
+
 
 class SimAlmacen:
     def __init__(
@@ -136,7 +146,8 @@ class SimAlmacen:
 
         # Inicializar robots en puntos spawn únicos
         if len(puntos_spawn) < robots:
-            raise RuntimeError("No hay suficientes puntos de spawn para la cantidad de robots.")
+            raise RuntimeError(
+                "No hay suficientes puntos de spawn para la cantidad de robots.")
         self.lista_robots: List[Robot] = []
         for i in range(robots):
             self.lista_robots.append(Robot(robot_id=i, pos=puntos_spawn[i]))
@@ -153,7 +164,8 @@ class SimAlmacen:
 
         # Gestión de pedidos
         self.pendientes: List[int] = []  # índices en self.pedidos
-        self.no_liberados = sorted(range(len(self.pedidos)), key=lambda i: self.pedidos[i].tick_creacion)
+        self.no_liberados = sorted(
+            range(len(self.pedidos)), key=lambda i: self.pedidos[i].tick_creacion)
 
     def _liberar_pedidos(self) -> None:
         while self.no_liberados and self.pedidos[self.no_liberados[0]].tick_creacion <= self.tick:
@@ -161,7 +173,16 @@ class SimAlmacen:
             self.pendientes.append(idx)
 
     def _asignar_pedidos(self) -> None:
-        # Greedy: para cada robot inactivo, asignar el anaquel más cercano a una celda adyacente de recolección
+        """
+        MEJORA EJE A: Asignación optimizada de pedidos.
+
+        Cambios respecto al baseline:
+        1. Evalúa TODOS los pedidos pendientes (no solo top-50)
+        2. Calcula costo total: dist(robot→anaquel) + dist(anaquel→estación)
+        3. Desempate por antigüedad del pedido (tick_creacion)
+
+        Implementado: Marzo 2026 - Entregable 3
+        """
         inactivos = [r for r in self.lista_robots if r.estado == "INACTIVO"]
         if (not inactivos) or (not self.pendientes):
             return
@@ -171,19 +192,36 @@ class SimAlmacen:
                 break
 
             mejor_idx: Optional[int] = None
-            mejor_dist = 10**9
+            mejor_costo = 10**9
 
-            # Considerar solo los primeros N en cola (localidad / performance)
-            for pi in self.pendientes[: min(50, len(self.pendientes))]:
+            # MEJORA 1: Evaluar TODOS los pedidos pendientes (no solo top-50)
+            for pi in self.pendientes:
                 p = self.pedidos[pi]
                 anaquel = self.anaquel_home[p.anaquel_id]
+                estacion = self.estacion_dock[p.estacion_id]
+
                 pickup = elegir_objetivo_adyacente(self.grid, anaquel)
                 if pickup is None:
                     continue
-                dist = abs(r.pos[0] - pickup[0]) + abs(r.pos[1] - pickup[1])
-                if dist < mejor_dist:
-                    mejor_dist = dist
+
+                # MEJORA 2: Calcular costo total del viaje completo
+                # robot → anaquel + anaquel → estación
+                dist_robot_anaquel = abs(
+                    r.pos[0] - pickup[0]) + abs(r.pos[1] - pickup[1])
+                dist_anaquel_estacion = abs(
+                    pickup[0] - estacion[0]) + abs(pickup[1] - estacion[1])
+                costo_total = dist_robot_anaquel + dist_anaquel_estacion
+
+                # MEJORA 3: Desempate por antigüedad (priorizar pedidos más viejos)
+                # Si empate en costo (±5%), preferir pedido más antiguo
+                if costo_total < mejor_costo * 0.95:
+                    mejor_costo = costo_total
                     mejor_idx = pi
+                elif costo_total < mejor_costo * 1.05:
+                    # Empate técnico: priorizar pedido más antiguo
+                    if self.pedidos[pi].tick_creacion < self.pedidos[mejor_idx].tick_creacion:
+                        mejor_costo = costo_total
+                        mejor_idx = pi
 
             if mejor_idx is None:
                 continue
@@ -245,7 +283,8 @@ class SimAlmacen:
 
         elif r.estado == "A_ESTACION":
             r.estado = "RETORNO"
-            pickup = elegir_objetivo_adyacente(self.grid, r.anaquel_home) if r.anaquel_home else None
+            pickup = elegir_objetivo_adyacente(
+                self.grid, r.anaquel_home) if r.anaquel_home else None
             if pickup is None:
                 r.estado = "A_ESTACION"
                 return
@@ -297,11 +336,13 @@ class SimAlmacen:
             siguiente = propuestas[r.robot_id]
 
             if siguiente == actual:
-                self.tabla_reservas.confirmar_espera(r.robot_id, actual, tick_siguiente)
+                self.tabla_reservas.confirmar_espera(
+                    r.robot_id, actual, tick_siguiente)
                 continue
 
             if self.tabla_reservas.puede_moverse(actual, siguiente, tick_siguiente):
-                self.tabla_reservas.confirmar_movimiento(r.robot_id, actual, siguiente, tick_siguiente)
+                self.tabla_reservas.confirmar_movimiento(
+                    r.robot_id, actual, siguiente, tick_siguiente)
                 r.pos = siguiente
                 r.idx_ruta += 1
                 r.celdas_movidas += 1
@@ -309,7 +350,8 @@ class SimAlmacen:
             else:
                 r.ticks_espera += 1
                 self.eventos_alto += 1
-                self.tabla_reservas.confirmar_espera(r.robot_id, actual, tick_siguiente)
+                self.tabla_reservas.confirmar_espera(
+                    r.robot_id, actual, tick_siguiente)
 
         # Heurística de deadlock: nadie se movió pero al menos un robot está ocupado
         if (not movio_alguien) and any(r.estado != "INACTIVO" for r in self.lista_robots):
@@ -331,14 +373,17 @@ class SimAlmacen:
         return [r.robot_id for r in self.lista_robots]
 
     def metricas(self) -> Dict:
-        completados = [p for p in self.pedidos if p.tick_completado is not None]
+        completados = [
+            p for p in self.pedidos if p.tick_completado is not None]
         completados_n = len(completados)
 
         tiempo_promedio_pedido = None
         if completados_n > 0:
-            tiempo_promedio_pedido = float(np.mean([(p.tick_completado - p.tick_creacion) for p in completados]))
+            tiempo_promedio_pedido = float(
+                np.mean([(p.tick_completado - p.tick_creacion) for p in completados]))
 
-        utilizacion = [r.ticks_ocupado / max(1, self.tick) for r in self.lista_robots]
+        utilizacion = [r.ticks_ocupado /
+                       max(1, self.tick) for r in self.lista_robots]
         ticks_espera = [r.ticks_espera for r in self.lista_robots]
 
         throughput = 0.0
