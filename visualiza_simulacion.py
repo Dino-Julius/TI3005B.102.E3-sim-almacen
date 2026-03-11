@@ -22,8 +22,10 @@ BLOQUEADO = 3
 
 Celda = Tuple[int, int]
 
+
 def _ruta_por_escenario(escenario: str, nombre_archivo: str) -> str:
     return os.path.join("outputs", escenario, nombre_archivo)
+
 
 def cargar_pedidos(ruta: str) -> List[Pedido]:
     """
@@ -51,6 +53,7 @@ def cargar_pedidos(ruta: str) -> List[Pedido]:
         )
     return pedidos
 
+
 def graficar_layout(grid: np.ndarray, salida_png: str) -> None:
     """
     Visualización estática del layout.
@@ -74,6 +77,7 @@ def graficar_layout(grid: np.ndarray, salida_png: str) -> None:
     plt.tight_layout()
     plt.savefig(salida_png, dpi=200)
     plt.close()
+
 
 def guardar_heatmaps(grid: np.ndarray, visitas: np.ndarray, esperas: np.ndarray, prefijo: str = "heatmap") -> None:
     """
@@ -115,7 +119,8 @@ def guardar_heatmaps(grid: np.ndarray, visitas: np.ndarray, esperas: np.ndarray,
 
     plt.figure(figsize=(10, 7))
     plt.title("Heatmap: Ratio Espera/Visita (congestión relativa)")
-    plt.imshow(np.where(transitable, ratio, 0.0), origin="upper", interpolation="nearest")
+    plt.imshow(np.where(transitable, ratio, 0.0),
+               origin="upper", interpolation="nearest")
     plt.xlabel("x")
     plt.ylabel("y")
     plt.colorbar()
@@ -123,7 +128,9 @@ def guardar_heatmaps(grid: np.ndarray, visitas: np.ndarray, esperas: np.ndarray,
     plt.savefig(f"{prefijo}_ratio.png", dpi=200)
     plt.close()
 
-    print(f"[OK] Heatmaps escritos: {prefijo}_visitas.png, {prefijo}_esperas.png, {prefijo}_ratio.png")
+    print(
+        f"[OK] Heatmaps escritos: {prefijo}_visitas.png, {prefijo}_esperas.png, {prefijo}_ratio.png")
+
 
 def _mapa_colores_estados() -> Tuple[Dict[str, float], mpl.colors.Colormap, mpl.colors.Normalize]:
     """
@@ -140,6 +147,7 @@ def _mapa_colores_estados() -> Tuple[Dict[str, float], mpl.colors.Colormap, mpl.
     cmap = mpl.colors.ListedColormap(colores, name="estado_robots")
     norm = mpl.colors.Normalize(vmin=0.0, vmax=3.0)
     return estado_a_val, cmap, norm
+
 
 def animar(
     grid: np.ndarray,
@@ -253,18 +261,27 @@ def animar(
         anim.save(salida_video, writer=animation.PillowWriter(fps=fps))
     else:
         Writer = animation.writers["ffmpeg"]
-        writer = Writer(fps=fps, metadata={"artist": "sim_almacen"}, bitrate=1800)
+        writer = Writer(fps=fps, metadata={
+                        "artist": "sim_almacen"}, bitrate=1800)
         anim.save(salida_video, writer=writer)
 
     plt.close(fig)
 
     guardar_heatmaps(grid, visitas, esperas, prefijo=prefijo_heatmap)
 
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--robots", type=int, default=20)
     ap.add_argument("--ticks", type=int, default=10000)
+    ap.add_argument(
+        "--modo_asignacion",
+        type=str,
+        choices=["baseline", "mejora"],
+        default="mejora",
+        help="Modo de asignación reproducible: baseline o mejora.",
+    )
     ap.add_argument("--pasos_por_frame", type=int, default=25)
     ap.add_argument("--fps", type=int, default=20)
 
@@ -280,7 +297,7 @@ def main():
     ap.add_argument(
         "--ffmpeg_path",
         type=str,
-        default=None, #"C:\ffmpeg\bin\ffmpeg.exe",
+        default=None,  # "C:\ffmpeg\bin\ffmpeg.exe",
         help="Ruta a ffmpeg.exe (Windows). Si se omite, se usa el valor configurado en el script.",
     )
 
@@ -302,16 +319,24 @@ def main():
         mpl.rcParams["animation.ffmpeg_path"] = args.ffmpeg_path
 
     # Entradas por escenario si no se dieron explícitamente
-    ruta_layout = args.layout or _ruta_por_escenario(args.escenario, "layout.npy")
-    ruta_estaciones = args.estaciones or _ruta_por_escenario(args.escenario, "estaciones.json")
-    ruta_anaqueles = args.anaqueles or _ruta_por_escenario(args.escenario, "anaqueles.json")
-    ruta_spawn = args.spawn or _ruta_por_escenario(args.escenario, "spawn.json")
-    ruta_pedidos = args.pedidos or _ruta_por_escenario(args.escenario, "pedidos.json")
+    ruta_layout = args.layout or _ruta_por_escenario(
+        args.escenario, "layout.npy")
+    ruta_estaciones = args.estaciones or _ruta_por_escenario(
+        args.escenario, "estaciones.json")
+    ruta_anaqueles = args.anaqueles or _ruta_por_escenario(
+        args.escenario, "anaqueles.json")
+    ruta_spawn = args.spawn or _ruta_por_escenario(
+        args.escenario, "spawn.json")
+    ruta_pedidos = args.pedidos or _ruta_por_escenario(
+        args.escenario, "pedidos.json")
 
     # Salidas por escenario si no se dieron explícitamente
-    ruta_layout_png = args.layout_png or _ruta_por_escenario(args.escenario, "layout.png")
-    ruta_video = args.salida_video or _ruta_por_escenario(args.escenario, "simulacion.mp4")
-    prefijo_heatmap = args.prefijo_heatmap or _ruta_por_escenario(args.escenario, "heatmap")
+    ruta_layout_png = args.layout_png or _ruta_por_escenario(
+        args.escenario, "layout.png")
+    ruta_video = args.salida_video or _ruta_por_escenario(
+        args.escenario, "simulacion.mp4")
+    prefijo_heatmap = args.prefijo_heatmap or _ruta_por_escenario(
+        args.escenario, "heatmap")
 
     asegurar_dirs_de_salidas([
         ruta_layout_png,
@@ -337,6 +362,7 @@ def main():
         puntos_spawn=spawns,
         pedidos=pedidos,
         seed=args.seed,
+        modo_asignacion=args.modo_asignacion,
     )
 
     animar(
@@ -349,6 +375,7 @@ def main():
         prefijo_heatmap=prefijo_heatmap,
     )
     print(f"[OK] Video escrito en {ruta_video}")
+
 
 if __name__ == "__main__":
     main()

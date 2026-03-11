@@ -6,8 +6,10 @@ from typing import List
 from out_paths import asegurar_dirs_de_salidas
 from sim_core import Pedido, SimAlmacen, cargar_layout
 
+
 def _ruta_por_escenario(escenario: str, nombre_archivo: str) -> str:
     return os.path.join("outputs", escenario, nombre_archivo)
+
 
 def cargar_pedidos(ruta: str) -> List[Pedido]:
     """
@@ -36,11 +38,19 @@ def cargar_pedidos(ruta: str) -> List[Pedido]:
 
     return pedidos
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--robots", type=int, default=20)
     parser.add_argument("--ticks", type=int, default=10000)
+    parser.add_argument(
+        "--modo_asignacion",
+        type=str,
+        choices=["baseline", "mejora"],
+        default="mejora",
+        help="Modo de asignación reproducible: baseline o mejora.",
+    )
 
     # Nuevo estándar
     parser.add_argument(
@@ -51,25 +61,37 @@ def main():
     )
 
     # Overrides de entradas (modo avanzado / compatibilidad)
-    parser.add_argument("--layout", type=str, default=None, help="(Opcional) Ruta explícita a layout.npy")
-    parser.add_argument("--estaciones", type=str, default=None, help="(Opcional) Ruta explícita a estaciones.json")
-    parser.add_argument("--anaqueles", type=str, default=None, help="(Opcional) Ruta explícita a anaqueles.json")
-    parser.add_argument("--spawn", type=str, default=None, help="(Opcional) Ruta explícita a spawn.json")
-    parser.add_argument("--pedidos", type=str, default=None, help="(Opcional) Ruta explícita a pedidos.json")
+    parser.add_argument("--layout", type=str, default=None,
+                        help="(Opcional) Ruta explícita a layout.npy")
+    parser.add_argument("--estaciones", type=str, default=None,
+                        help="(Opcional) Ruta explícita a estaciones.json")
+    parser.add_argument("--anaqueles", type=str, default=None,
+                        help="(Opcional) Ruta explícita a anaqueles.json")
+    parser.add_argument("--spawn", type=str, default=None,
+                        help="(Opcional) Ruta explícita a spawn.json")
+    parser.add_argument("--pedidos", type=str, default=None,
+                        help="(Opcional) Ruta explícita a pedidos.json")
 
     # Salida
-    parser.add_argument("--salida_metricas", type=str, default=None, help="(Opcional) Ruta explícita a metricas.json")
+    parser.add_argument("--salida_metricas", type=str, default=None,
+                        help="(Opcional) Ruta explícita a metricas.json")
 
     args = parser.parse_args()
 
     # Resolver rutas por escenario si no se dieron explícitamente
-    ruta_layout = args.layout or _ruta_por_escenario(args.escenario, "layout.npy")
-    ruta_estaciones = args.estaciones or _ruta_por_escenario(args.escenario, "estaciones.json")
-    ruta_anaqueles = args.anaqueles or _ruta_por_escenario(args.escenario, "anaqueles.json")
-    ruta_spawn = args.spawn or _ruta_por_escenario(args.escenario, "spawn.json")
-    ruta_pedidos = args.pedidos or _ruta_por_escenario(args.escenario, "pedidos.json")
+    ruta_layout = args.layout or _ruta_por_escenario(
+        args.escenario, "layout.npy")
+    ruta_estaciones = args.estaciones or _ruta_por_escenario(
+        args.escenario, "estaciones.json")
+    ruta_anaqueles = args.anaqueles or _ruta_por_escenario(
+        args.escenario, "anaqueles.json")
+    ruta_spawn = args.spawn or _ruta_por_escenario(
+        args.escenario, "spawn.json")
+    ruta_pedidos = args.pedidos or _ruta_por_escenario(
+        args.escenario, "pedidos.json")
 
-    ruta_metricas = args.salida_metricas or _ruta_por_escenario(args.escenario, "metricas.json")
+    ruta_metricas = args.salida_metricas or _ruta_por_escenario(
+        args.escenario, "metricas.json")
     asegurar_dirs_de_salidas([ruta_metricas])
 
     grid, estacion_dock, anaquel_home, spawns = cargar_layout(
@@ -86,6 +108,7 @@ def main():
         puntos_spawn=spawns,
         pedidos=pedidos,
         seed=args.seed,
+        modo_asignacion=args.modo_asignacion,
     )
 
     sim.run(args.ticks)

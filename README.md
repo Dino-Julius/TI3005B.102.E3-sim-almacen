@@ -153,37 +153,36 @@ Genera:
 - `heatmap_esperas.png`,
 - `heatmap_ratio.png`.
 
-## 5.5 Entregable 3: Implementación de Mejora (Eje A)
+## 5.5 Entregable 3: Implementación de Mejora (Eje A + Eje C)
 
 ### Mejora Implementada
 
-Se ha implementado una **optimización del Eje A: Asignación de Pedidos** que mejora la eficiencia del sistema en layouts grandes.
+Se implementó una mejora combinada sobre asignación y coordinación local:
 
-**Cambios realizados en `sim_core.py`:**
+- Eje A: evaluación global de pedidos, costo total robot->anaquel->estación y desempate por antigüedad.
+- Eje C: prioridad local de movimiento y replaneación ante bloqueo persistente.
 
-- ✅ Evaluación completa de pedidos (eliminada limitación top-50)
-- ✅ Cálculo de costo total: `dist(robot→anaquel) + dist(anaquel→estación)`
-- ✅ Desempate por antigüedad de pedido (anti-starvation)
+La comparación corregida de S2 se centra en un solo caso de alta carga:
 
-### Ejecutar Escenario S2 (Estrés de Flota)
+- Baseline 200 robots vs Mejora 200 robots.
+- 600 pedidos, 10,000 ticks, mismo escenario base.
+
+### Ejecutar S2 corregido (caso único 200r)
 
 ```bash
-# Verificar prerequisitos
-python verificar_setup.py
-
-# Ejecutar benchmarks con mejora (20, 40, 60 robots)
-chmod +x ejecutar_s2_mejora.sh
-./ejecutar_s2_mejora.sh
-
-# Generar análisis comparativo
-python analisis/generar_comparativa_s2.py
+./analisis/S2/ejecutar_s2_baseline.sh
+./analisis/S2/ejecutar_s2_mejora.sh
+python analisis/S2/generar_comparativa_s2.py
 ```
 
-**Objetivos S2:**
+### Resultados finales S2 (200r)
 
-- Evaluar escalabilidad con 20, 40 y 60 robots
-- Validar hipótesis: ↓20% distancia, ↓30% tiempo, ≥95% completitud
-- Analizar comportamiento bajo congestión
+- Pedidos completados: 580/600 -> 591/600 (+1.9%)
+- Throughput: 58.0 -> 59.1 (+1.9%)
+- Tiempo promedio: 641.5 -> 644.0 (+0.4%, trade-off)
+- Distancia total: 369,376 -> 378,782 (+2.5%, trade-off)
+- Eventos alto: 97,331 -> 4,928 (-94.9%)
+- Replaneaciones por bloqueo (mejora): 327
 
 ## 6. Componentes principales del sistema
 

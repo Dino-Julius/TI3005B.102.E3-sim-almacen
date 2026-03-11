@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Análisis Comparativo S2: Estrés de Flota (Baseline vs Mejora Eje A)
+Análisis Comparativo S2: Estrés de Flota (Baseline vs Mejora Eje A + Eje C)
 
-Compara métricas entre baseline y mejora para 20, 40, 60, 100, 200 robots.
-Genera tabla comparativa y análisis de escalabilidad.
+Compara métricas para UNICAMENTE el caso de 200 robots:
+S2_baseline_200r vs S2_mejora_200r.
 
 Entregable 3 - Marzo 2026
 """
@@ -50,14 +50,10 @@ def generar_tabla_comparativa():
     """Genera tabla comparativa markdown o análisis de mejora."""
 
     print("\n" + "="*80)
-    print("📊 ANÁLISIS S2: MÉTRICAS DE MEJORA EJE A")
+    print("📊 ANÁLISIS S2: MÉTRICAS DE MEJORA (EJE A + EJE C)")
     print("="*80 + "\n")
 
     escenarios = [
-        ("20r", "S2_baseline_20r", "S2_mejora_20r"),
-        ("40r", "S2_baseline_40r", "S2_mejora_40r"),
-        ("60r", "S2_baseline_60r", "S2_mejora_60r"),
-        ("100r", "S2_baseline_100r", "S2_mejora_100r"),
         ("200r", "S2_baseline_200r", "S2_mejora_200r"),
     ]
 
@@ -101,6 +97,7 @@ def generar_tabla_comparativa():
             ("distancia_total_celdas", "Distancia Total (celdas)", "d", True),
             ("deadlock", "Deadlocks", "d", True),
             ("eventos_alto", "Eventos Alto", "d", True),
+            ("replaneaciones_bloqueo", "Replaneaciones por bloqueo", "d", True),
         ]
 
         for metrica_key, metrica_nombre, fmt, menor_mejor in metricas_clave:
@@ -139,7 +136,7 @@ def generar_tabla_comparativa():
                 print(
                     f"| {metrica_nombre} | {label} | {base_str} | {mejora_str} | {diff_str} | {pct:+.1f}% {simbolo} |")
 
-        print("\n## 2. ANÁLISIS DE ESCALABILIDAD\n")
+        print("\n## 2. ANÁLISIS DEL CASO ÚNICO (200 ROBOTS)\n")
     else:
         print("⚠️  No hay datos baseline para comparación (solo análisis de mejora)\n")
         print("## 1. MÉTRICAS DE MEJORA EJECUTADAS\n")
@@ -154,7 +151,7 @@ def generar_tabla_comparativa():
             comp_pct = (m.get('pedidos_completados', 0) / total) * 100
             print(f"| {label} | {m.get('pedidos_completados', 0)}/{total} ({comp_pct:.1f}%) | {m.get('tiempo_promedio_pedido_ticks', 0):.1f} | {m.get('distancia_total_celdas', 0):,} | {m.get('utilizacion_promedio', 0)*100:.1f}% | {m.get('eventos_alto', 0):,} |")
 
-        print("\n## 2. ANÁLISIS DE ESCALABILIDAD (SOLO MEJORA)\n")
+        print("\n## 2. ANÁLISIS DEL CASO ÚNICO (SOLO MEJORA)\n")
 
     if tiene_baseline:
         # Análisis de pedidos completados
@@ -293,7 +290,7 @@ def generar_tabla_comparativa():
         mejoras_distancia = []
         mejoras_completitud = []
 
-        for label in ["20r", "40r", "60r", "100r", "200r"]:
+        for label in ["200r"]:
             if label not in datos:
                 continue
 
@@ -346,21 +343,14 @@ def generar_tabla_comparativa():
             print(
                 f"| Reducir Distancia | -20% | {avg_dist:+.1f}% | {estado_d} |")
 
-        # Hipótesis completitud
-        if datos.get("200r"):  # Usar el caso más estresante (200 robots)
+        # Hipótesis completitud (alcance corregido: caso único 200r)
+        if datos.get("200r"):
             mejora_200_comp = datos["200r"]['mejora']['pedidos_completados']
             total_200 = datos["200r"]['mejora']['pedidos_totales']
             pct_comp = (mejora_200_comp / total_200) * 100
             estado_c = "✅ Cumplido" if pct_comp >= 95 else "⚠️  Parcial"
             print(
                 f"| Completitud ≥95% (200r) | 95% | {pct_comp:.1f}% | {estado_c} |")
-        elif datos.get("60r"):  # Fallback al anterior
-            mejora_60_comp = datos["60r"]['mejora']['pedidos_completados']
-            total_60 = datos["60r"]['mejora']['pedidos_totales']
-            pct_comp = (mejora_60_comp / total_60) * 100
-            estado_c = "✅ Cumplido" if pct_comp >= 95 else "⚠️  Parcial"
-            print(
-                f"| Completitud ≥95% (60r) | 95% | {pct_comp:.1f}% | {estado_c} |")
     else:
         # Análisis solo de mejora
         print("### 📊 Resumen de Mejora (Sin Baseline)\n")
@@ -383,13 +373,10 @@ def generar_tabla_comparativa():
         print("| Objetivo | Criterio | Resultado | Estado |")
         print("|----------|----------|-----------|--------|")
 
-        # Validar completitud en 200r (o 60r si no está disponible)
+        # Validar completitud en 200r (alcance corregido)
         if datos.get("200r"):
             label_test = "200r"
             data_test = datos["200r"]['mejora']
-        elif datos.get("60r"):
-            label_test = "60r"
-            data_test = datos["60r"]['mejora']
         else:
             data_test = None
 
@@ -401,15 +388,8 @@ def generar_tabla_comparativa():
             print(
                 f"| Completitud ≥95% ({label_test}) | {pct_comp:.1f}% >= 95% | {completados}/{total} | {estado_comp} |")
 
-        # Validar reducción de tiempo (entre 20r y 200r)
-        if datos.get("20r") and datos.get("200r"):
-            tiempo_20 = datos["20r"]['mejora'].get(
-                'tiempo_promedio_pedido_ticks', 0)
-            tiempo_200 = datos["200r"]['mejora'].get(
-                'tiempo_promedio_pedido_ticks', 0)
-            reduccion_tiempo = ((tiempo_20 - tiempo_200) / tiempo_20) * 100
-            print(
-                f"| Escalabilidad de Tiempo | 20r → 200r | {reduccion_tiempo:.1f}% reducción | {'✅' if reduccion_tiempo > 0 else '❌'} |")
+        print(
+            "| Cobertura de Retro S2 | Baseline 200r vs Mejora 200r | Caso único comparado | ✅ |")
 
     print("\n" + "="*80)
     print("✅ Análisis completado")

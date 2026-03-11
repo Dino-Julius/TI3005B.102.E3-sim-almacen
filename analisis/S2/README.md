@@ -1,106 +1,158 @@
-# 📁 S2: Estrés de Flota - Benchmarks con Múltiples Robots
+# Análisis S2: Mejora de Asignación y Coordinación - Entregable 3
 
-**Proyecto:** TI3005B.102 - Simulación de Almacén  
-**Entregable:** 3 - Diseño e Implementación de la Mejora  
-**Eje Intervenido:** A - Asignación de Pedidos
+## 📋 Tabla de Contenidos
+
+1. [Descripción](#descripción)
+2. [Acceso a Documentación](#acceso-a-documentación)
+3. [Ejecución Rápida](#ejecución-rápida)
+4. [Resultados Clave](#resultados-clave)
+
+## Descripción
+
+**Entregable 3**: Diseño e implementación de mejora combinada en asignación de pedidos y coordinación local (Eje A + Eje C), incluyendo prioridad local de movimiento y replaneación cuando persiste bloqueo.
+
+### Hipótesis Validadas
+
+| #   | Hipótesis          | Meta  | Resultado | Estado         |
+| --- | ------------------ | ----- | --------- | -------------- |
+| H1  | Tiempo promedio    | ≥-30% | +0.4%     | ❌ NO CUMPLIDO |
+| H2  | Distancia total    | ≥-20% | +2.5%     | ❌ NO CUMPLIDO |
+| H3  | Completitud (200r) | ≥95%  | 98.5%     | ✅ CUMPLIDO    |
+
+### Corrección de Retro (alcance S2)
+
+Para cerrar la retro del Entregable 3, S2 se reporta con un solo caso comparativo:
+
+- Baseline 200 robots: `outputs/S2_baseline_200r/metricas.json`
+- Mejora 200 robots: `outputs/S2_mejora_200r/metricas.json`
+
+La matriz 20/40/60/100/200 queda como evidencia técnica histórica, pero no como base principal del reporte corregido.
+
+## Acceso a Documentación
+
+Para el cierre de S2 y la transición a S3, los documentos vigentes en este repositorio son:
+
+- [README.md](../../README.md): guía general del proyecto y flujo base de ejecución.
+- [Entregable 4. Estabilidad, robustez y escalabilidad.md](../../Entregable%204.%20Estabilidad,%20robustez%20y%20escalabilidad.md): síntesis de S2 corregido y plan/criterios de S3.
 
 ---
 
-## 📖 DOCUMENTACIÓN COMPLETA
+## Ejecución Rápida
 
-**Todo lo que necesitas está en un solo archivo:**
-
-👉 **[DOCUMENTACION_COMPLETA_S2.md](DOCUMENTACION_COMPLETA_S2.md)**
-
-Incluye:
-
-- ✅ Resumen ejecutivo y validación de hipótesis
-- ✅ Implementación técnica detallada
-- ✅ Guía de ejecución paso a paso
-- ✅ Resultados completos y análisis
-- ✅ Generación de videos
-
----
-
-## 🚀 Ejecución Rápida
-
-### Para ejecutar todo automáticamente:
+### Opción 1: Ejecutar mejora A+C (caso único 200r)
 
 ```bash
-cd analisis/S2
-chmod +x ejecutar_pipeline_s2.sh
-./ejecutar_pipeline_s2.sh
+python demo_final.py --escenario S2_mejora_200r --robots 200 --ticks 10000 --modo_asignacion mejora
+# Resultados en: outputs/S2_mejora_200r/metricas.json
 ```
 
-**Tiempo:** ~60 minutos (5 simulaciones de 10,000 ticks cada una)
-
-### Para generar video de 200 robots:
+### Opción 2: Ejecutar comparación corregida (caso único 200r)
 
 ```bash
-python visualiza_simulacion.py \
-  --escenario S2_mejora_200r \
-  --robots 200 \
-  --ticks 10000 \
-  --pasos_por_frame 25 \
-  --fps 30
+./analisis/S2/ejecutar_s2_baseline.sh
+./analisis/S2/ejecutar_s2_mejora.sh
+python analisis/S2/generar_comparativa_s2.py
+```
+
+### Opción 3: Pipeline completo automatizado
+
+```bash
+./analisis/S2/ejecutar_pipeline_s2.sh
+```
+
+## Resultados Clave
+
+### Métricas del Caso Único (200r)
+
+| Métrica                        | Baseline 200r   | Mejora 200r     | Lectura                   |
+| ------------------------------ | --------------- | --------------- | ------------------------- |
+| **Pedidos completados**        | 580/600 (96.7%) | 591/600 (98.5%) | Mejora de servicio        |
+| **Throughput**                 | 58.0            | 59.1            | Mejora ligera             |
+| **Tiempo promedio**            | 641.5 ticks     | 644.0 ticks     | Trade-off (+0.4%)         |
+| **Distancia total**            | 369,376 celdas  | 378,782 celdas  | Trade-off (+2.5%)         |
+| **Eventos alto**               | 97,331          | 4,928           | Fuerte mejora (-94.9%)    |
+| **Deadlocks**                  | 0               | 0               | Sin cambio                |
+| **Replaneaciones por bloqueo** | 0               | 327             | Activas en mejora (Eje C) |
+
+---
+
+## 📂 Estructura de Archivos
+
+```
+analisis/S2/
+├── README.md                          ← Este archivo
+├── ejecutar_s2_mejora.sh             ← Script mejora (caso único 200r)
+├── ejecutar_s2_baseline.sh           ← Script baseline (caso único 200r)
+├── ejecutar_pipeline_s2.sh           ← Automatización completa
+└── generar_comparativa_s2.py         ← Análisis comparativo
+
+outputs/S2_*/
+├── metricas.json                      ← Datos principales
+├── pedidos.json                       ← Detalles de órdenes
+├── anaqueles.json                     ← Configuración de almacenamiento
+├── estaciones.json                    ← Puntos de entrega
+└── spawn.json                         ← Posiciones iniciales
+
+outputs/visualizaciones/
+├── grafico_comparativo_s2.png
+├── tabla_metricas_s2.png
+└── heatmap_congestión_s2.png
 ```
 
 ---
 
-## 📂 Scripts Disponibles
+## Troubleshooting
 
-| Script                      | Propósito                          |
-| --------------------------- | ---------------------------------- |
-| `ejecutar_pipeline_s2.sh`   | Pipeline completo automatizado     |
-| `ejecutar_s2_mejora.sh`     | Solo benchmarks mejora (5 configs) |
-| `ejecutar_s2_baseline.sh`   | Solo benchmarks baseline           |
-| `generar_comparativa_s2.py` | Análisis comparativo               |
+**Error: "No module named 'sim_core'"**
 
----
+```bash
+cd /ruta/al/proyecto
+python demo_final.py --escenario S2_mejora_200r --robots 200 --ticks 10000 --modo_asignacion mejora
+```
 
-## 📊 Resultados (Resumen)
+**Error: "File exists"**
 
-| Métrica            | Meta | Resultado  | Estado      |
-| ------------------ | ---- | ---------- | ----------- |
-| Tiempo Promedio    | -30% | **-40.5%** | ✅ SUPERADO |
-| Distancia Total    | -20% | **-68.9%** | ✅ SUPERADO |
-| Completitud (200r) | ≥95% | **99.3%**  | ✅ SUPERADO |
+```bash
+rm -rf outputs/S2_mejora_200r
+./analisis/S2/ejecutar_s2_mejora.sh
+```
 
-**Ver análisis completo en:** [DOCUMENTACION_COMPLETA_S2.md](DOCUMENTACION_COMPLETA_S2.md#4-resultados-y-análisis)
+**Verificar integridad de datos**
 
----
+```bash
+python -c "import json; print(json.load(open('outputs/S2_mejora_200r/metricas.json')))"
+```
 
-## 🆘 Troubleshooting
+En la salida de métricas de mejora deben aparecer:
 
-| Problema           | Solución                                                                                       |
-| ------------------ | ---------------------------------------------------------------------------------------------- |
-| Layout no existe   | `python generador_layout.py --escenario seed1 --seed 1 --ancho 350 --alto 250 --estaciones 30` |
-| Pedidos no existen | `python generador_pedidos.py --escenario seed1 --pedidos 600 --burst`                          |
-| Simulación lenta   | Normal con 100+ robots (10-15 min cada una)                                                    |
+- `coordinacion_eje_c: prioridad_local_movimiento+replaneacion_bloqueo`
+- `replaneaciones_bloqueo`
+- `umbral_replan_bloqueo`
 
-**Ver más en:** [DOCUMENTACION_COMPLETA_S2.md](DOCUMENTACION_COMPLETA_S2.md#34-troubleshooting)
+**Reejecutar baseline sin revertir código**
 
----
-
-**Última actualización:** Marzo 2026
+```bash
+python demo_final.py --escenario seed1 --robots 200 --ticks 10000 --modo_asignacion baseline --salida_metricas outputs/S2_baseline_200r/metricas.json
+```
 
 ---
 
-## ✅ Resultados Obtenidos
+## 📊 Próximos Pasos
 
-| Objetivo                  | Meta | Resultado | Estado      |
-| ------------------------- | ---- | --------- | ----------- |
-| Reducir Tiempo Promedio   | -30% | -40.5%    | ✅ SUPERADO |
-| Reducir Distancia Total   | -20% | -68.9%    | ✅ SUPERADO |
-| Mantener Completitud ≥95% | 95%  | 99.3%     | ✅ SUPERADO |
+1. **Revisar** [Entregable 4. Estabilidad, robustez y escalabilidad.md](../../Entregable%204.%20Estabilidad,%20robustez%20y%20escalabilidad.md) para criterios S3
+2. **Validar** resultados en `outputs/S2_mejora_200r/metricas.json`
+3. **Generar** visualizaciones: `python generar_todo_visualizaciones.py`
+4. **Preparar** presentación con gráficos y tabla de resultados
 
-Ver [REPORTE_FINAL_S2.md](REPORTE_FINAL_S2.md) para análisis detallado.
+---
+
+**Estado**: ✅ COMPLETO Y LISTO PARA ENTREGA  
+**Última actualización**: Marzo 2026  
+**Validación**: Completitud y congestión mejoran; tiempo y distancia presentan trade-off
 
 ---
 
 ## 📚 Documentación
 
-- **[REPORTE_FINAL_S2.md](REPORTE_FINAL_S2.md)** - Análisis completo con hallazgos
-- **[docs/DOCUMENTACION_TECNICA_MEJORA_EJE_A.md](docs/DOCUMENTACION_TECNICA_MEJORA_EJE_A.md)** - Especificación técnica
-- **[docs/GUIA_EJECUCION_S2.md](docs/GUIA_EJECUCION_S2.md)** - Guía paso a paso
-- **[docs/RESUMEN_EJECUTIVO.md](docs/RESUMEN_EJECUTIVO.md)** - Resumen de implementación
+- [README.md](../../README.md)
+- [Entregable 4. Estabilidad, robustez y escalabilidad.md](../../Entregable%204.%20Estabilidad,%20robustez%20y%20escalabilidad.md)
