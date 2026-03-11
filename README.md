@@ -222,6 +222,33 @@ Veredicto S3: se cumple estabilidad, robustez y escalabilidad con análisis de d
 
 Reporte detallado S3: `analisis/S3/reporte_s3.md`
 
+## 5.7 Insights adicionales sin regenerar simulaciones
+
+Si quieres enriquecer el trabajo final con gráficas adicionales usando solo outputs existentes:
+
+```bash
+python analisis/generar_insights_outputs.py
+```
+
+Este script:
+
+- **no** regenera layouts ni simulaciones,
+- consume `metricas.json` y `pedidos.json` disponibles,
+- usa heatmaps existentes solo cuando estén presentes,
+- reporta escenarios/archivos faltantes sin detener todo el proceso.
+
+Genera en:
+
+- `analisis/insights/graficos/latencia_percentiles.png`
+- `analisis/insights/graficos/congestion_normalizada.png`
+- `analisis/insights/graficos/eficiencia_distancia.png`
+- `analisis/insights/graficos/replan_vs_congestion.png`
+- `analisis/insights/graficos/perfil_demanda_ticks.png`
+- `analisis/insights/graficos/top_estaciones_carga.png`
+- `analisis/insights/reporte_insights.md`
+
+Nota: si un escenario no tiene heatmaps (`heatmap_visitas.png`, `heatmap_esperas.png`, `heatmap_ratio.png`), el reporte solo lo marca como faltante y continúa con el resto de insights.
+
 ## 6. Componentes principales del sistema
 
 ### `sim_core.py`
