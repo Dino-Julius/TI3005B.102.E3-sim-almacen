@@ -1,0 +1,68 @@
+
+================================================================================
+📊 ANÁLISIS S2: MÉTRICAS DE MEJORA (EJE A + EJE C)
+================================================================================
+
+## 1. TABLA COMPARATIVA DE MÉTRICAS CLAVE
+
+| Métrica | Config | Baseline | Mejora | Δ | Δ% |
+|---------|--------|----------|--------|---|-----|
+| Pedidos Completados | 200r | 580 | 591 | +11 | +1.9% ➖ |
+| Tiempo Promedio (ticks) | 200r | 641.5 | 644.0 | +2.5 | +0.4% ➖ |
+| Throughput (p/1000t) | 200r | 58.00 | 59.10 | +1.10 | +1.9% ➖ |
+| Tiempo Espera (ticks) | 200r | 486.7 | 24.6 | -462.0 | -94.9% ✅ |
+| Utilización (%) | 200r | 23.4 | 19.2 | -4.1 | -17.8% ❌ |
+| Distancia Total (celdas) | 200r | 369376 | 378782 | +9406 | +2.5% ➖ |
+| Deadlocks | 200r | 0 | 0 | +0 | +0.0% ➖ |
+| Eventos Alto | 200r | 97331 | 4928 | -92403 | -94.9% ✅ |
+| Replaneaciones por bloqueo | 200r | 0 | 327 | +327 | +inf% ❌ |
+
+## 2. ANÁLISIS DEL CASO ÚNICO (200 ROBOTS)
+
+### 📦 Completitud de Pedidos
+
+**200r:**
+- Baseline: 580/600 (96.7%)
+- Mejora: 591/600 (98.5%)
+- Δ: +1.8% ✅
+
+### ⏱️  Tiempo Promedio por Pedido
+
+**200r:**
+- Baseline: 641.5 ticks
+- Mejora: 644.0 ticks
+- Δ: +2.5 ticks (+0.4%) ❌
+
+### 🚗 Distancia Total Recorrida
+
+**200r:**
+- Baseline: 369,376 celdas
+- Mejora: 378,782 celdas
+- Δ: +9,406 celdas (+2.5%) ❌
+
+### 🚦 Eventos de Congestión (Deadlocks + Alto)
+
+**200r:**
+- Baseline: 97,331 eventos (DL:0, Alto:97331)
+- Mejora: 4,928 eventos (DL:0, Alto:4928)
+- Δ: -92,403 eventos (-94.9%) ✅
+
+
+## 3. CONCLUSIONES
+
+**Tiempo Promedio:** +0.4% promedio
+**Distancia Total:** +2.5% promedio
+**Completitud:** +1.9% promedio
+
+### Validación de Hipótesis (Entregable 3):
+
+| Objetivo | Meta | Resultado | Estado |
+|----------|------|-----------|---------|
+| Reducir Tiempo | -30% | +0.4% | ❌ No cumplido |
+| Reducir Distancia | -20% | +2.5% | ❌ No cumplido |
+| Completitud ≥95% (200r) | 95% | 98.5% | ✅ Cumplido |
+
+================================================================================
+✅ Análisis completado
+================================================================================
+
