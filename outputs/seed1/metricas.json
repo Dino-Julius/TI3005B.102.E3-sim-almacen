@@ -1,16 +1,16 @@
 {
   "seed": 42,
   "tick_final": 10000,
-  "robots": 20,
+  "robots": 200,
   "pedidos_totales": 600,
-  "pedidos_completados": 596,
-  "tiempo_promedio_pedido_ticks": 770.7265100671141,
-  "throughput_pedidos_por_1000_ticks": 59.6,
-  "tiempo_promedio_espera_ticks": 448.6,
-  "utilizacion_promedio": 0.5347449999999998,
+  "pedidos_completados": 580,
+  "tiempo_promedio_pedido_ticks": 635.4086206896552,
+  "throughput_pedidos_por_1000_ticks": 58.0,
+  "tiempo_promedio_espera_ticks": 537.855,
+  "utilizacion_promedio": 0.23925449999999998,
   "colisiones_vertice": 0,
   "intercambios_arista": 0,
-  "deadlock": 54,
-  "eventos_alto": 8972,
-  "distancia_total_celdas": 97381
+  "deadlock": 0,
+  "eventos_alto": 107571,
+  "distancia_total_celdas": 370358
 }

@@ -8,6 +8,11 @@ Esta carpeta contiene todos los scripts de análisis y diagnóstico del simulado
 
 ```
 analisis/
+├── S3/
+│   ├── ejecutar_s3.sh
+│   ├── generar_reporte_s3.py
+│   └── README.md
+│
 ├── diagnosticos/
 │   ├── diagnostico_layout.py
 │   └── outputs/                    # PNG con anotaciones técnicas
@@ -158,6 +163,15 @@ python analisis/comparador_visual_seed1_vs_seed42.py
 python analisis/analizador_estadistico.py
 python analisis/generar_todo_visualizaciones.py
 ```
+
+### Entregable 4 (S3): ejecución completa
+
+```bash
+chmod +x analisis/S3/ejecutar_s3.sh
+./analisis/S3/ejecutar_s3.sh
+```
+
+Genera `analisis/S3/reporte_s3.md` con comparación A/B/C.
 
 ### Ver outputs generados:
 
