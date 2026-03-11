@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Genera gráficos comparativos para Entregable 4 (S2 vs S3)
+Genera gráficos comparativos para Entregable 4
 Salida: analisis/S3/graficos/*.png
 """
 

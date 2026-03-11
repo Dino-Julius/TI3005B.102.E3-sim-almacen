@@ -170,9 +170,13 @@ La comparación corregida de S2 se centra en un solo caso de alta carga:
 ### Ejecutar S2 corregido (caso único 200r)
 
 ```bash
-./analisis/S2/ejecutar_s2_baseline.sh
-./analisis/S2/ejecutar_s2_mejora.sh
-python analisis/S2/generar_comparativa_s2.py
+./analisis/S2/ejecutar_pipeline_s2.sh --solo-analisis
+```
+
+Si deseas regenerar datos de S2, usa:
+
+```bash
+./analisis/S2/ejecutar_pipeline_s2.sh
 ```
 
 ### Resultados finales S2 (200r)
@@ -183,6 +187,40 @@ python analisis/S2/generar_comparativa_s2.py
 - Distancia total: 369,376 -> 378,782 (+2.5%, trade-off)
 - Eventos alto: 97,331 -> 4,928 (-94.9%)
 - Replaneaciones por bloqueo (mejora): 327
+
+Reporte detallado S2: `analisis/S2/S2_resultados.txt`
+
+## 5.6 Entregable 4: S3 (Estabilidad, robustez y escalabilidad)
+
+S3 evalúa la mejora (Eje A + Eje C) en tres escenarios de estrés:
+
+- A: `S3_alta_densidad_400r` (400 robots, 600 pedidos, 10,000 ticks)
+- B: `S3_burst_200r_1200` (200 robots, 1,200 pedidos, 15,000 ticks)
+- C: `S3_var_400r_1200` (400 robots, 1,200 pedidos, 15,000 ticks)
+
+### Ejecutar S3 sin regenerar datos (recomendado)
+
+```bash
+./analisis/S3/ejecutar_s3.sh --solo-reporte
+```
+
+### Ejecutar S3 completo (regenera escenarios + reporte)
+
+```bash
+./analisis/S3/ejecutar_s3.sh
+```
+
+### Resultados finales S3 (A/B/C)
+
+- Completitud: A 98.5%, B 100%, C 100%
+- Throughput (ped/1000 ticks): A 59.10, B 80.00, C 80.00
+- p95 pedido (ticks): A 1032.00, B 1861.55, C 1043.00
+- Deadlocks: A 0, B 0, C 0
+- Delta C vs A: Throughput +35.36%, p95 +1.07%
+
+Veredicto S3: se cumple estabilidad, robustez y escalabilidad con análisis de distribución (mediana/p90/p95).
+
+Reporte detallado S3: `analisis/S3/reporte_s3.md`
 
 ## 6. Componentes principales del sistema
 
