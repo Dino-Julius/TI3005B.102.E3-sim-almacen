@@ -77,13 +77,64 @@ python analisis/S3/generar_reporte_s3.py
 
 Conclusión breve: la mejora A+C cumple estabilidad, robustez y escalabilidad usando métricas de distribución (mediana/p90/p95), no solo promedios.
 
+## S3 extendido (estres + series temporales)
+
+Este flujo ejecuta escenarios de estres alto (D y E) y guarda métricas temporales por ventana.
+
+- D: `S3_estres_D_200r_6000` (200 robots, 6000 pedidos)
+- E: `S3_estres_E_200r_12000` (200 robots, 12000 pedidos)
+
+### Ejecutar escenarios D/E con series temporales
+
+```bash
+./analisis/S3/ejecutar_s3_extendido.sh
+```
+
+Opcional: sobre-escribir ticks y ventana temporal
+
+```bash
+TICKS_D=60000 TICKS_E=120000 VENTANA=500 ./analisis/S3/ejecutar_s3_extendido.sh
+```
+
+### Salidas generadas
+
+- `outputs/S3_estres_D_200r_6000/metricas.json`
+- `outputs/S3_estres_D_200r_6000/metricas_temporales.json`
+- `outputs/S3_estres_D_200r_6000/metricas_temporales.csv`
+- `outputs/S3_estres_E_200r_12000/metricas.json`
+- `outputs/S3_estres_E_200r_12000/metricas_temporales.json`
+- `outputs/S3_estres_E_200r_12000/metricas_temporales.csv`
+- `analisis/S3/graficos/S3_estres_D_200r_6000/*.png`
+- `analisis/S3/graficos/S3_estres_E_200r_12000/*.png`
+
+### Ejecutar solo una simulacion temporal (modo manual)
+
+```bash
+python analisis/S3/registrar_metricas_temporales.py \
+  --escenario S3_estres_D_200r_6000 \
+  --robots 200 \
+  --ticks 60000 \
+  --seed 1 \
+  --ventana 500 \
+  --modo_asignacion mejora
+```
+
+### Generar graficas desde un JSON temporal
+
+```bash
+python analisis/S3/generar_graficas_temporales.py --escenario S3_estres_D_200r_6000
+```
+
 ## Estructura de S3
 
 ```text
 analisis/S3/
 ├── README.md
 ├── ejecutar_s3.sh
+├── ejecutar_s3_extendido.sh
 ├── generar_reporte_s3.py
+├── registrar_metricas_temporales.py
+├── generar_graficas_temporales.py
 ├── reporte_s3.md
 └── graficos/
 ```
